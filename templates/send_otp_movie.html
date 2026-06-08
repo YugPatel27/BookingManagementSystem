@@ -1,0 +1,401 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Send OTP</title>
+
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600" />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/plugins.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/booking-unified.css' %}">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #0a1428 0%, #051023 100%);
+            font-family: 'Nunito', sans-serif;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .page-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* OTP CARD */
+        .otp-card {
+            background: linear-gradient(135deg, rgba(20, 30, 60, 0.95), rgba(15, 25, 50, 0.95));
+            padding: 50px;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* TITLE */
+        .otp-title {
+            font-size: 28px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .otp-subtitle {
+            font-size: 14px;
+            color: #b0b0b0;
+            margin-bottom: 30px;
+        }
+
+        /* INPUT */
+        .otp-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-family: 'Nunito', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .otp-input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #2196F3;
+        }
+
+        .otp-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* BUTTON */
+        .otp-btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        .otp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(33, 150, 243, 0.5);
+        }
+
+        .otp-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .otp-card {
+                padding: 35px;
+            }
+
+            .otp-title {
+                font-size: 24px;
+            }
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+<img class="logo" src="{% static 'images/logo1.png' %}" width="119">
+<div id="status">
+<span></span>
+<span></span>
+</div>
+</div>
+
+
+<header class="ht-header">
+<div class="container">
+
+<nav class="navbar navbar-default navbar-custom">
+<!-- Brand and toggle get grouped for better mobile display -->
+<div class="navbar-header logo">
+	<div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		<span class="sr-only">Toggle navigation</span>
+		<div id="nav-icon1">
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
+	<a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt="" width="119" height="58"></a>
+</div>
+<!-- Collect the nav links, forms, and other content for toggling -->
+<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+	<ul class="nav navbar-nav flex-child-menu menu-left">
+		<li class="hidden">
+			<a href="#page-top"></a>
+		</li>
+		<li class="dropdown first">
+			<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
+				Home <i class="fa fa-angle-down" aria-hidden="true"></i>
+			</a>
+			<ul class="dropdown-menu level1">
+				<li><a href="{% url 'index' %}">Landing Page</a></li>
+			</ul>
+		</li>
+		<li class="dropdown first">
+			<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+				movies<i class="fa fa-angle-down" aria-hidden="true"></i>
+			</a>
+			<ul class="dropdown-menu level1">
+				<li><a href="{% url 'show_movies' %}">Movie list</a></li>
+			</ul>
+		</li>
+		<li class="dropdown first">
+			<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+				Events <i class="fa fa-angle-down" aria-hidden="true"></i>
+			</a>
+			<ul class="dropdown-menu level1">
+				<li><a href="{% url 'Live_Events' %}">Live Events</a></li>
+			</ul>
+		</li>
+	</ul>
+	<ul class="nav navbar-nav flex-child-menu menu-right">
+		<li><a href="#">Help</a></li>
+		{% if user.is_authenticated %}
+			<li class="dropdown first">
+				<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
+					{{ user.first_name|default:user.username }} <i class="fa fa-angle-down" aria-hidden="true"></i>
+				</a>
+				<ul class="dropdown-menu level1">
+					<li><a href="{% url 'logout' %}">Logout</a></li>
+				</ul>
+			</li>
+		{% else %}
+			<li class="loginLink"><a href="#" data-toggle="modal" data-target="#loginModal">LOG In</a></li>
+			<li class="btn signupLink"><a href="#" data-toggle="modal" data-target="#signupModal">sign up</a></li>
+		{% endif %}
+	</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+
+<div class="top-search">
+<input type="text" placeholder="Search movies, actors, events...">
+</div>
+
+</div>
+</header>
+
+    <div class="main-content">
+        <div class="page-wrapper">
+            <div class="otp-card">
+                <h2 class="otp-title">📧 Email Verification</h2>
+                <p class="otp-subtitle">Enter your email to receive OTP</p>
+
+                <form method="post" action="{% url 'send_otp_movie' %}">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="cinema_id" value="{{ cinema_id }}">
+                    <input type="hidden" name="movie_id" value="{{ movie_id }}">
+                    <input type="hidden" name="show_time" value="{{ show_time }}">
+                    <input type="hidden" name="screen_no" value="{{ screen_no }}">
+                    <input type="hidden" name="release_date" value="{{ release_date }}">
+                    <input type="hidden" name="director" value="{{ director }}">
+                    <input type="hidden" name="cast" value="{{ cast }}">
+                    <input type="hidden" name="step" value="send">
+
+                    <input
+                        type="email"
+                        name="email"
+                        class="otp-input"
+                        placeholder="Enter your email address"
+                        required
+                    >
+
+                    <button type="submit" class="otp-btn">
+                        📬 Send OTP
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="ht-footer">
+        <div class="container">
+            <div class="flex-parent-ft">
+                <div class="flex-child-ft item1">
+                    <a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt=""></a>
+                    <p>5th Avenue st, manhattan<br>New York, NY 10001</p>
+                    <p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+                </div>
+                <div class="flex-child-ft item2">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blockbuster</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Forums</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item3">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Terms of Use</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item4">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">Watchlist</a></li>
+                        <li><a href="#">Collections</a></li>
+                        <li><a href="#">User Guide</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item5">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe to our newsletter system now<br>to get latest news from us.</p>
+                    <form action="#">
+                        <input type="text" placeholder="Enter your email...">
+                    </form>
+                    <a href="#" class="btn">Subscribe now <i class="fa fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="ft-copyright">
+            <div class="ft-left">
+                <p><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></p>
+            </div>
+            <div class="backtotop">
+                <p><a href="#" id="back-to-top">Back to top <i class="fa fa-arrow-up"></i></a></p>
+            </div>
+        </div>
+    </footer>
+    <!-- END FOOTER -->
+<!-- Login Modal -->
+<div id="loginModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Login</h4>
+			</div>
+			<form method="POST" action="{% url 'login_view' %}">
+				{% csrf_token %}
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="login_email">Email Address</label>
+						<input type="email" class="form-control" id="login_email" name="email" required>
+					</div>
+					<div class="form-group">
+						<label for="login_password">Password</label>
+						<input type="password" class="form-control" id="login_password" name="password" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Login</button>
+				</div>
+			</form>
+			<div class="modal-body text-center" style="padding-top: 0;">
+				<p>Don't have an account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#signupModal">Sign up here</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Signup Modal -->
+<div id="signupModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Sign Up</h4>
+			</div>
+			<form method="POST" action="{% url 'register_view' %}">
+				{% csrf_token %}
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="username">username</label>
+						<input type="text" class="form-control" id="username" name="username" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_first_name">First Name</label>
+						<input type="text" class="form-control" id="signup_first_name" name="first_name" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_last_name">Last Name</label>
+						<input type="text" class="form-control" id="signup_last_name" name="last_name">
+					</div>
+					<div class="form-group">
+						<label for="signup_email">Email Address</label>
+						<input type="email" class="form-control" id="signup_email" name="email" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_phone">Phone Number</label>
+						<input type="tel" class="form-control" id="signup_phone" name="phone_number">
+					</div>
+					<div class="form-group">
+						<label for="signup_dob">Date of Birth</label>
+						<input type="date" class="form-control" id="signup_dob" name="date_of_birth">
+					</div>
+					<div class="form-group">
+						<label for="signup_password">Password</label>
+						<input type="password" class="form-control" id="signup_password" name="password" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_confirm_password">Confirm Password</label>
+						<input type="password" class="form-control" id="signup_confirm_password" name="confirm_password" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Sign Up</button>
+				</div>
+			</form>
+			<div class="modal-body text-center" style="padding-top: 0;">
+				<p>Already have an account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Login here</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/plugins2.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+</body>
+</html>

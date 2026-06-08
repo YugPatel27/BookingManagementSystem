@@ -1,0 +1,223 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+    <title>Dashboard - Booking System</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="User Dashboard">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone-no">
+
+    <link rel="stylesheet" href="{% static 'css/plugins.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .dashboard-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+        }
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+        .profile-info h2 {
+            color: #333;
+            margin: 0;
+        }
+        .profile-info p {
+            color: #666;
+            margin: 5px 0;
+        }
+        .logout-btn {
+            background-color: #ff6b6b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #ff5252;
+        }
+        .bookings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .booking-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 5px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .booking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .booking-card h4 {
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+        .booking-card p {
+            color: #666;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .status-confirmed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .no-bookings {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .no-bookings a {
+            color: #667eea;
+            text-decoration: none;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-card h3 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .stat-card p {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="container" style="max-width: 1000px; margin: 0 auto;">
+            <div class="dashboard-card">
+                <div class="profile-header">
+                    <div class="profile-info">
+                        <h2>Welcome, {{ user.first_name|default:user.username }}!</h2>
+                        <p>Email: {{ user.email }}</p>
+                        {% if profile.phone_number %}
+                        <p>Phone: {{ profile.phone_number }}</p>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>{{ total_movie_bookings }}</h3>
+                        <p>Movie Bookings</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>{{ total_event_bookings }}</h3>
+                        <p>Event Bookings</p>
+                    </div>
+                </div>
+
+                <!-- Movie Bookings Section -->
+                <h3 style="margin-top: 30px; color: #333;">Movie Bookings</h3>
+                {% if movie_bookings %}
+                    <div class="bookings-grid">
+                        {% for booking in movie_bookings %}
+                        <div class="booking-card">
+                            <h4>{{ booking.movie_id.name }}</h4>
+                            <p><strong>Cinema:</strong> {{ booking.cinema_id.cinema_name }}</p>
+                            <p><strong>Date:</strong> {{ booking.booking_time|date:"M d, Y" }}</p>
+                            <p><strong>Seats:</strong> {{ booking.no_of_tickets }} ({{ booking.seat_category }})</p>
+                            <p><strong>Amount:</strong> ₹{{ booking.total_amount }}</p>
+                            <span class="status-badge status-{{ booking.status }}">
+                                {{ booking.get_status_display }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-bookings">
+                        <p>No movie bookings yet</p>
+                        <a href="{% url 'show_movies' %}">Browse Movies →</a>
+                    </div>
+                {% endif %}
+
+                <!-- Event Bookings Section -->
+                <h3 style="margin-top: 30px; color: #333;">Event Bookings</h3>
+                {% if event_bookings %}
+                    <div class="bookings-grid">
+                        {% for booking in event_bookings %}
+                        <div class="booking-card">
+                            <h4>{{ booking.Event.title }}</h4>
+                            <p><strong>Venue:</strong> {{ booking.Event.venue }}</p>
+                            <p><strong>Date:</strong> {{ booking.B_date|date:"M d, Y" }}</p>
+                            <p><strong>Seats:</strong> {{ booking.no_of_seats }} ({{ booking.seat_catagory }})</p>
+                            <p><strong>Amount:</strong> ₹{{ booking.total_amount }}</p>
+                            <span class="status-badge status-{{ booking.payment_status }}">
+                                {{ booking.get_payment_status_display }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="no-bookings">
+                        <p>No event bookings yet</p>
+                        <a href="{% url 'Live_Events' %}">Browse Events →</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+
+</html>

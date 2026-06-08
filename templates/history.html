@@ -1,0 +1,326 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Open Pediatrics</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/plugins.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Nunito', sans-serif;
+            background: #0b0c2a;
+        }
+
+        header.ht-header {
+            background: rgba(0, 0, 0, 0.75);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .page-content {
+            margin-top: 200px;
+            min-height: 60vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        /* Card styles */
+        .booking-card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .booking-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 20px;
+            width: 300px;
+            color: #fff;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .booking-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(255, 75, 43, 0.6);
+        }
+
+        .booking-card h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            text-align: center;
+            color: #ff416c;
+        }
+
+        .booking-card p {
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .booking-card p span {
+            font-weight: 700;
+            color: #ff4b2b;
+        }
+
+        /* Popup */
+        .booking-popup {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .popup-content {
+            background: url("{% static 'images/bg.gif' %}") center/cover no-repeat;
+            padding: 35px;
+            border-radius: 12px;
+            width: 420px;
+            color: #fff;
+            position: relative;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .popup-content h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .popup-content input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: none;
+            outline: none;
+        }
+
+        .popup-content button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 30px;
+            border: none;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .popup-content button:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        .message-text {
+            margin-top: 12px;
+            text-align: center;
+            font-weight: 600;
+            color: #ff4b2b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <!--preloading-->
+    <div id="preloader">
+        <img class="logo" src="{% static 'images/logo1.png' %}" alt="" width="119" height="58">
+        <div id="status">
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <!--end of preloading-->
+
+
+    <!-- BEGIN | Header -->
+    <header class="ht-header">
+        <div class="container">
+            <nav class="navbar navbar-default navbar-custom">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header logo">
+                    <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <div id="nav-icon1">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt=""
+                            width="119" height="58"></a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav flex-child-menu menu-left">
+                        <li class="hidden">
+                            <a href="#page-top"></a>
+                        </li>
+                        <li class="dropdown first">
+                            <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
+                                Home <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu level1">
+                                <li><a href="{% url 'index' %}">Home 01</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown first">
+                            <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                                movies<i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu level1">
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Movie grid<i
+                                            class="ion-ios-arrow-forward"></i></a>
+                            </ul>
+                        </li>
+                        <li class="dropdown first">
+                            <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                                Events <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </a>
+                            <ul class="dropdown-menu level1">
+                                <li><a href="{% url 'Live_Events' %}">Live Events</a></li>
+
+                            </ul>
+                        </li>
+
+
+                    </ul>
+                    <ul class="nav navbar-nav flex-child-menu menu-right">
+                        <li class="dropdown first">
+                            <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                                pages <i class="fa fa-angle-down" aria-hidden="true"></i>
+                            </a>
+
+                        <li><a href="#">Help</a></li>
+                    </ul>
+                </div>
+                <ul class="nav navbar-nav flex-child-menu menu-right">
+                    {% if request.session.email %}
+                    <li><a href="{% url 'history_logout' %}" style="color:#ff4b2b; font-weight:700;">LOGOUT</a></li>
+                    {% else %}
+                    <li class="btn signupLink"><a href="#">sign up</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+    </header>
+    <!-- END | Header -->
+
+    <!-- PAGE CONTENT -->
+    <div class="page-content">
+        {% if bookings %}
+        <h2 style="color:#fff;text-align:center;margin-bottom:30px;">🎟 My Booking Tickets</h2>
+        <div class="booking-card-container">
+            {% for b in bookings %}
+            <div class="booking-card">
+                <h3>{{ b.name }}</h3>
+                <p><span>Email:</span> {{ b.email_id }}</p>
+                <p><span>DOB:</span> {{ b.birth_date }}</p>
+                <p><span>Phone:</span> {{ b.phone_number }}</p>
+                <p><span>Booking Date:</span> {{ b.b_date }}</p>
+                <p><span>Seat Category:</span> {{ b.seat_category }}</p>
+                <p><span>No. of Tickets:</span> {{ b.no_of_tickets }}</p>
+                <p><span>Screen No:</span> {{ b.screen_no }}</p>
+                <p><span>Total Amount:</span> ₹ {{ b.total_amount }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        <script>alert("Booking match found!");</script>
+        {% else %}
+        <script>
+            window.onload = function () {
+                document.getElementById("bookingPopup").style.display = "flex";
+            }
+        </script>
+        {% endif %}
+    </div>
+
+    <!-- EMAIL VERIFICATION POPUP -->
+    <div id="bookingPopup" class="booking-popup">
+        <div class="popup-content">
+            <span class="close" onclick="closeBooking()">&times;</span>
+
+            <h3>Email Verification</h3>
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Enter registered email" required>
+                <button type="submit">Verify</button>
+            </form>
+
+            {% for message in messages %}
+            <div class="message-text">{{ message }}</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="ht-footer">
+        <div class="container">
+            <div class="flex-parent-ft">
+                <div class="flex-child-ft item1">
+                    <img class="logo" src="{% static 'images/logo1.png' %}" alt="">
+                    <p>5th Avenue st, Manhattan<br>New York, NY 10001</p>
+                </div>
+                <div class="flex-child-ft item2">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="flex-child-ft item3">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/plugins.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+
+    <script>
+        function closeBooking() {
+            document.getElementById("bookingPopup").style.display = "none";
+        }
+    </script>
+
+</body>
+
+</html>

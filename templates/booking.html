@@ -1,0 +1,329 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movie Booking</title>
+
+<!-- Bootstrap -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+
+body{
+font-family:'Segoe UI',sans-serif;
+min-height:100vh;
+
+background:
+linear-gradient(rgba(5,10,30,0.85),rgba(5,10,30,0.85)),
+url("https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=1920&q=80");
+
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+}
+
+.booking-card{
+background:#ffffff;
+border-radius:14px;
+box-shadow:0 15px 40px rgba(0,0,0,0.35);
+overflow:hidden;
+}
+
+.event-details-section{
+background:linear-gradient(135deg,#0b1d3a,#102b5c);
+color:#ffffff;
+padding:30px;
+}
+
+.event-title{
+font-size:1.9rem;
+font-weight:bold;
+}
+
+.event-genre{
+font-size:1rem;
+font-style:italic;
+opacity:0.9;
+margin-bottom:8px;
+}
+
+.event-meta p{
+margin:6px 0;
+font-size:0.95rem;
+}
+
+.booking-form-section{
+padding:30px;
+}
+
+.booking-form-section h2{
+font-weight:700;
+}
+
+.form-control,
+.form-select{
+border-radius:8px;
+}
+
+.btn-book{
+background:#102b5c;
+color:#fff;
+font-weight:bold;
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+transition:all 0.3s ease;
+}
+
+.btn-book:hover{
+transform:translateY(-1px);
+}
+
+@media (max-width:768px){
+.event-details-section{
+text-align:center;
+}
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+<div class="booking-card row w-100" style="max-width:950px;">
+<div class="col-md-5 event-details-section">
+
+<h1 class="event-title">Movie Details</h1>
+
+<div class="event-meta mt-3">
+
+<p>
+<i class="bi bi-calendar-event"></i>
+<strong>Release Date:</strong> {{ release_date }}
+</p>
+
+<p>
+<i class="bi bi-people-fill"></i>
+<strong>Director:</strong> {{ director }}
+</p>
+
+<p>
+<i class="bi bi-person-video3"></i>
+<strong>Cast:</strong> {{ cast }}
+</p>
+
+</div>
+
+</div>
+
+
+<!-- Booking Form -->
+<div class="col-md-7 booking-form-section">
+
+<h2 class="mb-4 text-primary">🎟️ Book Your Tickets</h2>
+
+<form action="{% url 'generate_ticket' %}" method="POST">
+{% csrf_token %}
+
+<input type="hidden" name="cinema_id" value="{{ cinema_id }}">
+<input type="hidden" name="movie_id" value="{{ movie_id }}">
+<input type="hidden" name="show_time" value="{{ show_time }}">
+<input type="hidden" name="screen_no" value="{{ screen_no }}">
+<input type="hidden" name="release_date" value="{{ release_date }}">
+<input type="hidden" name="director" value="{{ director }}">
+<input type="hidden" name="cast" value="{{ cast }}">
+
+<!-- Full Name -->
+<div class="mb-3">
+<label class="form-label">Full Name</label>
+<input type="text" class="form-control" name="name" placeholder="John Doe" required>
+</div>
+
+<!-- Email -->
+<div class="mb-3">
+<label class="form-label">Email Address</label>
+<input type="email" class="form-control" name="email_id" placeholder="john@example.com" required>
+</div>
+
+<!-- Phone + Birth -->
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Phone Number</label>
+<input type="tel" class="form-control" name="phone_number" placeholder="+91 1234567890" required>
+</div>
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Birth Date</label>
+<input type="date" id="birthDate" class="form-control" name="birth_date" required>
+<small id="birthMessage" class="text-danger"></small>
+</div>
+
+</div>
+
+<!-- Booking Time -->
+<div class="mb-3">
+<label class="form-label">Booking Time</label>
+<input type="text" class="form-control" name="booking_time" value="{{ show_time }}" readonly>
+</div>
+
+<!-- Seat Category + Price -->
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Seat Category</label>
+<select class="form-select" id="seatCategory" name="seat_category" required>
+<option value="">Select Seat</option>
+<option value="Regular">Regular</option>
+<option value="Premium">Premium</option>
+<option value="VIP">VIP</option>
+</select>
+</div>
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Price per Ticket</label>
+<input type="number" id="price" name="price_per_ticket" class="form-control" readonly>
+</div>
+
+</div>
+
+<!-- Seats -->
+<div class="mb-3">
+<label class="form-label">Number of Seats</label>
+<input type="number" id="seats" class="form-control" name="no_of_tickets" min="1" max="10" required>
+<small id="seatMessage" class="text-danger"></small>
+</div>
+
+<!-- Total -->
+<div class="mb-3">
+<label class="form-label">Total Amount (₹)</label>
+<input type="number" id="total" class="form-control" name="total_amount" readonly>
+</div>
+
+<!-- Screen -->
+<div class="mb-4">
+<label class="form-label">Screen Number </label>
+<input type="number" id="screen_no" class="form-control" name="screen_no"
+placeholder="Enter Screen Number" value="{{ screen_no }}" required>
+</div>
+
+<button type="submit" class="btn-book">Confirm Booking</button>
+</form>
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+// Elements
+const category = document.getElementById("seatCategory");
+const priceInput = document.getElementById("price");
+const seatsInput = document.getElementById("seats");
+const totalInput = document.getElementById("total");
+const seatMessage = document.getElementById("seatMessage");
+
+const birthInput = document.getElementById("birthDate");
+const birthMessage = document.getElementById("birthMessage");
+
+
+// Seat category price
+category.addEventListener("change", function(){
+
+let price = 0;
+
+if(category.value === "Regular"){
+price = 200;
+}
+else if(category.value === "Premium"){
+price = 350;
+}
+else if(category.value === "VIP"){
+price = 500;
+}
+
+priceInput.value = price;
+
+calculateTotal();
+
+});
+
+
+// Seat validation
+seatsInput.addEventListener("input", function(){
+
+let seats = parseInt(seatsInput.value);
+
+if(seats > 10){
+seatMessage.textContent = "Maximum 10 tickets allowed.";
+seatsInput.value = 10;
+seats = 10;
+}
+else{
+seatMessage.textContent = "";
+}
+
+calculateTotal();
+
+});
+
+
+// Total calculation
+function calculateTotal(){
+
+let price = parseInt(priceInput.value);
+let seats = parseInt(seatsInput.value);
+
+if(!isNaN(price) && !isNaN(seats)){
+totalInput.value = price * seats;
+}
+else{
+totalInput.value = "";
+}
+
+}
+
+
+// Birth date validation
+birthInput.max = new Date().toISOString().split("T")[0];
+
+birthInput.addEventListener("change", function(){
+
+const selectedDate = new Date(birthInput.value);
+const today = new Date();
+
+let age = today.getFullYear() - selectedDate.getFullYear();
+let monthDiff = today.getMonth() - selectedDate.getMonth();
+let dayDiff = today.getDate() - selectedDate.getDate();
+
+if(monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)){
+age--;
+}
+
+if(selectedDate >= today){
+birthMessage.textContent = "Birth date cannot be today or future.";
+birthInput.value = "";
+return;
+}
+
+if(age < 18){
+birthMessage.textContent = "You must be at least 18 years old.";
+birthInput.value = "";
+return;
+}
+
+birthMessage.textContent = "";
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,457 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<title>Live Movies</title>
+
+<link rel="stylesheet" href="{% static 'css/plugins.css' %}">
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+<style>
+
+body{
+background:#0b0b0b;
+font-family:'Segoe UI',sans-serif;
+color:white;
+margin:0;
+}
+
+/* HEADER FIX */
+.ht-header{
+position:relative;
+z-index:1000;
+}
+
+/* HERO */
+.live-hero{
+margin-top:180px;
+text-align:center;
+padding:40px 20px;
+}
+
+.live-hero h1{
+font-size:40px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.live-hero p{
+color:#aaa;
+font-size:15px;
+}
+
+/* MOVIE GRID */
+.live-wrapper{
+max-width:1300px;
+margin:auto;
+padding:20px;
+padding-bottom:80px;
+}
+
+.live-movie-grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+gap:30px;
+}
+
+/* CARD */
+.live-movie-card{
+background:#141414;
+border-radius:12px;
+overflow:hidden;
+box-shadow:0 5px 25px rgba(0,0,0,0.6);
+transition:0.35s;
+display:flex;
+flex-direction:column;
+}
+
+.live-movie-card:hover{
+transform:translateY(-8px) scale(1.03);
+box-shadow:0 15px 35px rgba(0,0,0,0.9);
+}
+
+/* IMAGE */
+.live-movie-img{
+position:relative;
+height:340px;
+overflow:hidden;
+}
+
+.live-movie-img img{
+width:100%;
+height:100%;
+object-fit:cover;
+transition:0.4s;
+}
+
+.live-movie-card:hover img{
+transform:scale(1.08);
+}
+
+/* RATING BADGE */
+.rating-badge{
+position:absolute;
+top:10px;
+right:10px;
+background:#e50914;
+padding:5px 10px;
+border-radius:6px;
+font-size:13px;
+font-weight:600;
+}
+
+/* OVERLAY */
+.img-overlay{
+position:absolute;
+bottom:0;
+left:0;
+width:100%;
+height:60%;
+background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);
+}
+
+/* INFO */
+.live-movie-info{
+padding:18px;
+display:flex;
+flex-direction:column;
+gap:6px;
+}
+
+.live-movie-genre{
+color:#aaa;
+font-size:13px;
+}
+
+.live-movie-name{
+font-size:18px;
+font-weight:700;
+margin:5px 0;
+}
+
+.movie-meta{
+font-size:13px;
+color:#bbb;
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+}
+
+/* BUTTON */
+.live-movie-btn{
+margin-top:10px;
+text-decoration:none;
+background:#e50914;
+padding:10px;
+text-align:center;
+border-radius:6px;
+font-size:14px;
+font-weight:600;
+transition:.3s;
+}
+
+.live-movie-btn:hover{
+background:#c40712;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+.live-hero{
+margin-top:230px;
+}
+
+.live-movie-img{
+height:300px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- PRELOADER -->
+<div id="preloader">
+<img class="logo" src="{% static 'images/logo1.png' %}" width="119">
+<div id="status">
+<span></span>
+<span></span>
+</div>
+</div>
+
+
+<header class="ht-header">
+<div class="container">
+
+<nav class="navbar navbar-default navbar-custom">
+<!-- Brand and toggle get grouped for better mobile display -->
+<div class="navbar-header logo">
+	<div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+		<span class="sr-only">Toggle navigation</span>
+		<div id="nav-icon1">
+			<span></span>
+			<span></span>
+			<span></span>
+		</div>
+	</div>
+	<a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt="" width="119" height="58"></a>
+</div>
+<!-- Collect the nav links, forms, and other content for toggling -->
+<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+	<ul class="nav navbar-nav flex-child-menu menu-left">
+		<li class="hidden">
+			<a href="#page-top"></a>
+		</li>
+		<li class="dropdown first">
+			<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
+				Home <i class="fa fa-angle-down" aria-hidden="true"></i>
+			</a>
+			<ul class="dropdown-menu level1">
+				<li><a href="{% url 'index' %}">Landing Page</a></li>
+			</ul>
+		</li>
+		<li class="dropdown first">
+			<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+				movies<i class="fa fa-angle-down" aria-hidden="true"></i>
+			</a>
+			<ul class="dropdown-menu level1">
+				<li><a href="{% url 'show_movies' %}">Movie list</a></li>
+			</ul>
+		</li>
+		<li class="dropdown first">
+			<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+				Events <i class="fa fa-angle-down" aria-hidden="true"></i>
+			</a>
+			<ul class="dropdown-menu level1">
+				<li><a href="{% url 'Live_Events' %}">Live Events</a></li>
+			</ul>
+		</li>
+	</ul>
+	<ul class="nav navbar-nav flex-child-menu menu-right">
+		<li><a href="#">Help</a></li>
+		{% if user.is_authenticated %}
+			<li class="dropdown first">
+				<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
+					{{ user.first_name|default:user.username }} <i class="fa fa-angle-down" aria-hidden="true"></i>
+				</a>
+				<ul class="dropdown-menu level1">
+					<li><a href="{% url 'logout' %}">Logout</a></li>
+				</ul>
+			</li>
+		{% else %}
+			<li class="loginLink"><a href="#" data-toggle="modal" data-target="#loginModal">LOG In</a></li>
+			<li class="btn signupLink"><a href="#" data-toggle="modal" data-target="#signupModal">sign up</a></li>
+		{% endif %}
+	</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+
+<div class="top-search">
+<input type="text" placeholder="Search movies, actors, events...">
+</div>
+
+</div>
+</header>
+
+
+<!-- HERO -->
+<div class="live-hero">
+<h1>🎬 Now Showing</h1>
+<p>Book tickets for the latest movies playing in cinemas near you</p>
+</div>
+
+
+<div class="live-wrapper">
+
+<div class="live-movie-grid">
+
+{% for mv in movies %}
+<div class="live-movie-card">
+
+<div class="live-movie-img">
+
+{% if mv.movie_image %}
+<img src="{{ mv.movie_image.url }}" alt="{{ mv.name }}">
+{% else %}
+<img src="{% static 'images/no-image.png' %}">
+{% endif %}
+
+<div class="rating-badge">
+⭐ {{ mv.rating }}
+</div>
+
+<div class="img-overlay"></div>
+
+</div>
+
+<div class="live-movie-info">
+
+<span class="live-movie-genre">
+{{ mv.genre }}
+</span>
+
+<h6 class="live-movie-name">
+{{ mv.name }}
+</h6>
+
+<div class="movie-meta">
+<span>{{ mv.language }}</span>
+<span>{{ mv.duration }} min</span>
+</div>
+
+<a href="{% url 'movie_booking' mv.id %}" class="live-movie-btn">
+Book Tickets
+</a>
+
+</div>
+
+</div>
+{% endfor %}
+
+</div>
+
+</div>
+
+
+<!-- FOOTER -->
+<footer class="ht-footer">
+<div class="container">
+
+<div class="flex-parent-ft">
+
+<div class="flex-child-ft item1">
+<img class="logo" src="{% static 'images/logo1.png' %}">
+<p>5th Avenue st, Manhattan<br>New York, NY 10001</p>
+<p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+</div>
+
+<div class="flex-child-ft item2">
+<h4>Resources</h4>
+<ul>
+<li><a href="#">About</a></li>
+<li><a href="#">Contact Us</a></li>
+<li><a href="#">Blog</a></li>
+<li><a href="#">Help Center</a></li>
+</ul>
+</div>
+
+<div class="flex-child-ft item3">
+<h4>Legal</h4>
+<ul>
+<li><a href="#">Terms of Use</a></li>
+<li><a href="#">Privacy Policy</a></li>
+</ul>
+</div>
+
+<div class="flex-child-ft item5">
+<h4>Newsletter</h4>
+<p>Subscribe to receive movie updates</p>
+<input type="text" placeholder="Enter email">
+</div>
+
+</div>
+
+</div>
+</footer>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Login</h4>
+			</div>
+			<form method="POST" action="{% url 'login_view' %}">
+				{% csrf_token %}
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="login_email">Email Address</label>
+						<input type="email" class="form-control" id="login_email" name="email" required>
+					</div>
+					<div class="form-group">
+						<label for="login_password">Password</label>
+						<input type="password" class="form-control" id="login_password" name="password" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Login</button>
+				</div>
+			</form>
+			<div class="modal-body text-center" style="padding-top: 0;">
+				<p>Don't have an account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#signupModal">Sign up here</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Signup Modal -->
+<div id="signupModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Sign Up</h4>
+			</div>
+			<form method="POST" action="{% url 'register_view' %}">
+				{% csrf_token %}
+				<div class="modal-body">
+					<div class="form-group">
+						<label for="username">username</label>
+						<input type="text" class="form-control" id="username" name="username" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_first_name">First Name</label>
+						<input type="text" class="form-control" id="signup_first_name" name="first_name" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_last_name">Last Name</label>
+						<input type="text" class="form-control" id="signup_last_name" name="last_name">
+					</div>
+					<div class="form-group">
+						<label for="signup_email">Email Address</label>
+						<input type="email" class="form-control" id="signup_email" name="email" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_phone">Phone Number</label>
+						<input type="tel" class="form-control" id="signup_phone" name="phone_number">
+					</div>
+					<div class="form-group">
+						<label for="signup_dob">Date of Birth</label>
+						<input type="date" class="form-control" id="signup_dob" name="date_of_birth">
+					</div>
+					<div class="form-group">
+						<label for="signup_password">Password</label>
+						<input type="password" class="form-control" id="signup_password" name="password" required>
+					</div>
+					<div class="form-group">
+						<label for="signup_confirm_password">Confirm Password</label>
+						<input type="password" class="form-control" id="signup_confirm_password" name="confirm_password" required>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="submit" class="btn btn-primary">Sign Up</button>
+				</div>
+			</form>
+			<div class="modal-body text-center" style="padding-top: 0;">
+				<p>Already have an account? <a href="#" data-dismiss="modal" data-toggle="modal" data-target="#loginModal">Login here</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/plugins2.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+</body>
+</html>

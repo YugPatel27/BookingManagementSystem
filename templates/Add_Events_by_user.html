@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Event</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* ===== Global ===== */
+        body {
+            background: linear-gradient(135deg, #f5f7fa, #e4ecf5);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        /* ===== Container Card ===== */
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 35px 40px;
+            border-radius: 14px;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ===== Headings ===== */
+        h2 {
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1e2a3a;
+        }
+
+        h4 {
+            margin-top: 40px;
+            font-weight: 600;
+            border-left: 5px solid #0d6efd;
+            padding-left: 12px;
+            color: #0d6efd;
+        }
+
+        h5 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        /* ===== Labels & Inputs ===== */
+        .form-label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+            padding: 10px 12px;
+            border: 1px solid #dfe4ea;
+            transition: 0.2s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.15);
+        }
+
+        /* ===== Textarea ===== */
+        textarea.form-control {
+            resize: none;
+        }
+
+        /* ===== File Inputs ===== */
+        input[type="file"] {
+            padding: 8px;
+        }
+
+        /* ===== Seat Section ===== */
+        .seat-section {
+            background: #3a198756;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        /* ===== Add Seat Button ===== */
+        .btn-secondary {
+            background: #e9f0ff;
+            color: #0d6efd;
+            border: 1px dashed #0d6efd;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        /* ===== Submit Button ===== */
+        .btn-primary {
+            background: linear-gradient(135deg, #0d6efd, #0047ff);
+            border: none;
+            font-weight: 600;
+            padding: 14px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
+        }
+
+        /* ===== Alerts ===== */
+        .alert {
+            border-radius: 10px;
+            font-weight: 500;
+        }
+
+        /* ===== Mobile Responsive ===== */
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+            }
+
+            h2 {
+                font-size: 1.6rem;
+            }
+
+            h4 {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Add New Event</h2>
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" action="{% url 'addevents' %}">
+            {% csrf_token %}
+
+            <!-- Basic Event Details -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="title" class="form-label">Event Title *</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="venue" class="form-label">Venue *</label>
+                    <input type="text" class="form-control" id="venue" name="venue" required>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="category" class="form-label">Category *</label>
+                    <select class="form-select" id="category" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="Music">Music</option>
+                        <option value="Dance">Dance</option>
+                        <option value="Theater">Theater</option>
+                        <option value="Comedy">Comedy</option>
+                        <option value="Sports">Sports</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="exhibition">Exhibition</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="languages" class="form-label">Language *</label>
+                    <select class="form-select" id="languages" name="languages" required>
+                        <option value="">Select Language</option>
+                        <option value="English">English</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="Kannada">Kannada</option>
+                        <option value="Tamil">Tamil</option>
+                        <option value="Telugu">Telugu</option>
+                        <option value="Malayalam">Malayalam</option>
+                        <option value="Bengali">Bengali</option>
+                        <option value="Gujarati">Gujarati</option>
+                        <option value="Marathi">Marathi</option>
+                        <option value="Punjabi">Punjabi</option>
+                        <option value="Odia">Odia</option>
+                        <option value="Assamese">Assamese</option>
+                        <option value="Urdu">Urdu</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="AgeLimit" class="form-label">Age Limit *</label>
+                    <input type="text" class="form-control" id="AgeLimit" name="AgeLimit" required>
+                </div>
+            </div>
+            <!--discription view more and less-->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description *</label>
+                <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+
+
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="event_date" class="form-label">Date *</label>
+                        <input type="date" class="form-control" id="event_date" name="event_date" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="event_time" class="form-label">Time *</label>
+                        <input type="time" class="form-control" id="event_time" name="event_time" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="duration" class="form-label">Duration *</label>
+                        <input type="text" class="form-control" id="duration" name="duration" placeholder="e.g. 2 hours"
+                            required>
+                    </div>
+                </div>
+
+                <!-- Artist Details -->
+                <h4 class="mt-4 mb-3">Artist Details</h4>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="artist_name" class="form-label">Artist Name </label>
+                        <input type="text" class="form-control" id="artist_name" name="artist_name">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="artist_picture" class="form-label">Artist Picture</label>
+                        <input type="file" class="form-control" id="artist_picture" name="artist_picture">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="image" class="form-label">Event Banner *</label>
+                    <input type="file" class="form-control" id="image" name="image" required>
+                </div>
+
+                <!-- Seat Details -->
+                <h4 class="mt-4 mb-3">Ticket / Seat Categories</h4>
+                <div id="seat-container">
+                    <div class="seat-section">
+                        <h5>Seat Category 1</h5>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="form-label">Seat Name *</label>
+                                <input type="text" class="form-control" name="seat_name_1">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Price *</label>
+                                <input type="number" class="form-control" name="seat_price_1">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Total Seats *</label>
+                                <input type="number" class="form-control" name="seat_total_1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="seat_count" id="seat_count" value="1">
+
+                <button type="button" class="btn btn-secondary mb-3" onclick="addSeatCategory()">+ Add Format</button>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Add Event</button>
+                </div>
+        </form>
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let seatCount = 1;
+
+        function addSeatCategory() {
+            seatCount++;
+            document.getElementById('seat_count').value = seatCount;
+
+            const container = document.getElementById('seat-container');
+            const div = document.createElement('div');
+            div.className = 'seat-section';
+            div.innerHTML = `
+            <h5>Seat Category ${seatCount}</h5>
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label">Seat Name *</label>
+                    <input type="text" class="form-control" name="seat_name_${seatCount}" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Price *</label>
+                    <input type="number" class="form-control" name="seat_price_${seatCount}" required>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Total Seats *</label>
+                    <input type="number" class="form-control" name="seat_total_${seatCount}" required>
+                </div>
+            </div>
+        `;
+            container.appendChild(div);
+        }
+    </script>
+
+</body>
+
+</html>

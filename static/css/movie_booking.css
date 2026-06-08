@@ -1,0 +1,219 @@
+/* ================= GLOBAL ================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+
+body {
+    background: #0f172a;
+    color: #fff;
+    line-height: 1.6;
+}
+
+.booking-wrapper {
+    width: 95%;
+    max-width: 1300px;
+    margin: auto;
+    padding: 30px 0;
+}
+
+/* ================= MOVIE CARD ================= */
+.movie-details-card {
+    background: linear-gradient(135deg, #1e293b, #020617);
+    padding: 30px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.movie-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.movie-title span {
+    font-size: 18px;
+    color: #94a3b8;
+}
+
+.movie-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.movie-meta span {
+    background: #334155;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.movie-meta h3 {
+    width: 100%;
+    margin-top: 10px;
+    color: #38bdf8;
+}
+
+.movie-desc {
+    color: #cbd5e1;
+    margin-top: 15px;
+}
+
+/* ================= DATE STRIP ================= */
+.date-strip {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.date-box {
+    min-width: 80px;
+    background: #1e293b;
+    padding: 12px;
+    text-align: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.date-box:hover {
+    background: #334155;
+}
+
+.date-box.active {
+    background: #ef4444;
+}
+
+.date-box strong {
+    display: block;
+    font-size: 16px;
+}
+
+.date-box span {
+    font-size: 13px;
+}
+
+/* ================= FILTER ================= */
+.filter-strip {
+    margin-bottom: 20px;
+}
+
+.filter-strip select {
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    background: #1e293b;
+    color: white;
+    font-size: 14px;
+}
+
+/* ================= LEGEND ================= */
+.legend {
+    margin-bottom: 25px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.dot {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.available {
+    background: #22c55e;
+}
+
+.fast {
+    background: #f59e0b;
+}
+
+/* ================= CINEMA SECTION ================= */
+.section-title {
+    margin-bottom: 15px;
+    font-size: 24px;
+}
+
+.theatre-row {
+    background: #020617;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    border: 1px solid #1e293b;
+}
+
+/* Theatre Info */
+.theatre-info h1 {
+    font-size: 18px;
+    color: #38bdf8;
+}
+
+.theatre-info h4 {
+    font-size: 16px;
+}
+
+.theatre-info p {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* ================= SHOWTIMES ================= */
+.showtimes {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.showtime-btn {
+    text-decoration: none;
+    background: #111827;
+    padding: 10px 18px;
+    border-radius: 8px;
+    color: #22c55e;
+    border: 1px solid #22c55e;
+    font-weight: 600;
+    transition: 0.3s;
+    position: relative;
+}
+
+.showtime-btn:hover {
+    background: #22c55e;
+    color: black;
+    transform: scale(1.05);
+}
+
+.showtime-btn .format {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* ================= RESPONSIVE ================= */
+@media(max-width: 768px) {
+
+    .theatre-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .movie-title {
+        font-size: 24px;
+    }
+
+    .showtime-btn {
+        padding: 8px 14px;
+    }
+}

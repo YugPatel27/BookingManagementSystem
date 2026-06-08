@@ -1,0 +1,392 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My Bookings</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600" />
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/plugins.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/booking-unified.css' %}">
+    
+    <style>
+        body { 
+            margin:0; 
+            font-family:'Nunito', sans-serif; 
+            background: linear-gradient(135deg, #0a1428 0%, #051023 100%);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .page-content { 
+            min-height: calc(100vh - 300px); 
+            display:flex; 
+            justify-content:center; 
+            align-items:flex-start; 
+            flex-direction:column; 
+            padding:40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-content h2 {
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        /* Card styles */
+        .booking-card-container { 
+            display:flex; 
+            flex-wrap:wrap; 
+            justify-content:center; 
+            gap:25px;
+            width: 100%;
+        }
+
+        .booking-card { 
+            background: rgba(20, 35, 60, 0.85); 
+            border-radius:15px; 
+            padding:25px; 
+            width: 100%;
+            max-width: 320px;
+            color:#e0e0e0; 
+            backdrop-filter:blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        }
+
+        .booking-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 50px rgba(33, 150, 243, 0.3);
+            border-color: rgba(33, 150, 243, 0.5);
+        }
+
+        .booking-card h3 { 
+            font-size:20px; 
+            margin-bottom:15px; 
+            text-align:center; 
+            color:#64b5f6;
+            font-weight: 700;
+        }
+
+        .booking-card p { 
+            margin:8px 0; 
+            font-size:14px; 
+            line-height:1.6;
+            color: #b0b0b0;
+        }
+
+        .booking-card p span { 
+            font-weight:700; 
+            color:#2196F3;
+        }
+
+        /* Popup */
+        .booking-popup { 
+            display:none; 
+            position:fixed; 
+            inset:0; 
+            background: rgba(0, 0, 0, 0.85); 
+            justify-content:center; 
+            align-items:center; 
+            z-index:2000; 
+        }
+
+        .popup-content { 
+            background: linear-gradient(135deg, rgba(20, 35, 60, 0.95), rgba(15, 25, 50, 0.95));
+            padding:45px; 
+            border-radius:16px; 
+            width:420px;
+            max-width: 90%;
+            color:#fff; 
+            position:relative; 
+            backdrop-filter:blur(12px); 
+            box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .popup-content h3 { 
+            text-align:center; 
+            margin-bottom:20px; 
+            font-weight:700;
+            font-size: 22px;
+            color: #e0e0e0;
+        }
+
+        .popup-content input { 
+            width:100%; 
+            padding:12px; 
+            margin-top:10px; 
+            border-radius:8px; 
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            outline: none;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .popup-content input:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #2196F3;
+        }
+
+        .popup-content button { 
+            width:100%; 
+            padding:12px; 
+            margin-top:15px; 
+            border-radius:8px; 
+            border:none; 
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); 
+            color:#fff; 
+            font-weight:700; 
+            cursor:pointer; 
+            transition:all 0.3s ease;
+        }
+
+        .popup-content button:hover { 
+            transform:translateY(-2px);
+            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.4);
+        }
+
+        .close { 
+            position:absolute; 
+            top:15px; 
+            right:20px; 
+            font-size:28px; 
+            cursor:pointer;
+            color: #b0b0b0;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #fff;
+        }
+
+        .message-text { 
+            margin-top:12px; 
+            text-align:center; 
+            font-weight:600; 
+            color:#ff6b6b;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<!--preloading-->
+<div id="preloader">
+    <img class="logo" src="{% static 'images/logo1.png' %}" alt="" width="119" height="58">
+    <div id="status">
+        <span></span>
+        <span></span>
+    </div>
+</div>
+<!--end of preloading-->
+
+<!-- BEGIN | Header -->
+<header class="ht-header">
+    <div class="container">
+        <nav class="navbar navbar-default navbar-custom">
+            <div class="navbar-header logo">
+                <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <div id="nav-icon1">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt="" width="119" height="58"></a>
+            </div>
+            <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav flex-child-menu menu-left">
+                    <li class="hidden"><a href="#page-top"></a></li>
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">Home <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                        <ul class="dropdown-menu level1">
+                            <li><a href="{% url 'index' %}">Landing Page</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">Movies<i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                        <ul class="dropdown-menu level1">
+                            <li><a href="{% url 'show_movies' %}">Movie List</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">Events <i class="fa fa-angle-down" aria-hidden="true"></i></a>
+                        <ul class="dropdown-menu level1">
+                            <li><a href="{% url 'Live_Events' %}">Live Events</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav flex-child-menu menu-right">
+                    <li><a href="#">Help</a></li>
+                    {% if request.session.email %}
+                        <li><a href="{% url 'booking_logout' %}" style="color:#64b5f6; font-weight:700; padding: 8px 14px;">LOGOUT</a></li>
+                    {% else %}
+                        <li class="loginLink"><a href="#">LOG IN</a></li>
+                        <li class="btn signupLink"><a href="#">Sign Up</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+<!-- END | Header -->
+
+<div class="main-content">
+    <div class="page-wrapper">
+    {% if bookings %}
+        <h2 style="color:#ffffff;text-align:center;margin-bottom:30px;">🎟 My Booking Tickets</h2>
+        <div class="booking-card-container">
+            {% for b in bookings %}
+                <div class="booking-card">
+                    <h3>{{ b.name }}</h3>
+                    <p><span>Email:</span> {{ b.email_id }}</p>
+                    <p><span>DOB:</span> {{ b.birth_date }}</p>
+                    <p><span>Phone:</span> {{ b.phone_number }}</p>
+                    <p><span>Booking Date:</span> {{ b.b_date }}</p>
+                    <p><span>Seat Category:</span> {{ b.seat_category }}</p>
+                    <p><span>No. of Tickets:</span> {{ b.no_of_tickets }}</p>
+                    <p><span>Screen No:</span> {{ b.screen_no }}</p>
+                    <p><span>Total Amount:</span> ₹ {{ b.total_amount }}</p>
+                </div>
+            {% endfor %}
+        </div>
+        <script>alert("Booking match found!");</script>
+    {% else %}
+        <script>
+            window.onload = function() {
+                document.getElementById("bookingPopup").style.display = "flex";
+            }
+        </script>
+    {% endif %}
+</div>
+
+    </div>
+</div>
+
+<!-- EMAIL VERIFICATION POPUP -->
+<div id="bookingPopup" class="booking-popup">
+    <div class="popup-content">
+        <span class="close" onclick="closeBooking()">&times;</span>
+
+        <h3>📧 Email Verification</h3>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Enter registered email" required>
+            <button type="submit">Verify Email</button>
+        </form>
+
+        {% for message in messages %}
+            <div class="message-text">{{ message }}</div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="ht-footer">
+    <div class="container">
+        <div class="flex-parent-ft">
+            <div class="flex-child-ft item1">
+                <a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt=""></a>
+                <p>5th Avenue st, manhattan<br>New York, NY 10001</p>
+                <p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+            </div>
+            <div class="flex-child-ft item2">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">About</a></li>
+                    <li><a href="#">Blockbuster</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Forums</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="flex-child-ft item3">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Terms of Use</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Security</a></li>
+                </ul>
+            </div>
+            <div class="flex-child-ft item4">
+                <h4>Account</h4>
+                <ul>
+                    <li><a href="#">My Account</a></li>
+                    <li><a href="#">Watchlist</a></li>
+                    <li><a href="#">Collections</a></li>
+                    <li><a href="#">User Guide</a></li>
+                </ul>
+            </div>
+            <div class="flex-child-ft item5">
+                <h4>Newsletter</h4>
+                <p>Subscribe to our newsletter system now<br>to get latest news from us.</p>
+                <form action="#">
+                    <input type="text" placeholder="Enter your email...">
+                </form>
+                <a href="#" class="btn">Subscribe now <i class="fa fa-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="ft-copyright">
+        <div class="ft-left">
+            <p><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></p>
+        </div>
+        <div class="backtotop">
+            <p><a href="#" id="back-to-top">Back to top <i class="fa fa-arrow-up"></i></a></p>
+        </div>
+    </div>
+</footer>
+<!-- END FOOTER -->
+
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/plugins2.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+<script>
+    function closeBooking() {
+        document.getElementById("bookingPopup").style.display = "none";
+    }
+</script>
+
+</body>
+</html>
+
+<!-- JS -->
+<script src="{% static 'js/jquery.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/plugins.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+
+<script>
+    function closeBooking() {
+        document.getElementById("bookingPopup").style.display = "none";
+    }
+</script>
+
+</body>
+</html>

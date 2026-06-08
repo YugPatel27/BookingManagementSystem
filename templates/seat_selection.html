@@ -1,0 +1,436 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+
+<head>
+	<!-- Basic need -->
+	<title>Seat Selection</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="author" content="">
+	<link rel="profile" href="#">
+
+	<!--Google Font-->
+	<link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+	<!-- Mobile specific meta -->
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta name="format-detection" content="telephone-no">
+
+	<!-- CSS files -->
+	<link rel="stylesheet" href="{% static 'css/plugins.css' %}">
+	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+	<link rel="stylesheet" href="{% static 'css/booking-unified.css' %}">
+
+	<style>
+		body {
+			background: linear-gradient(135deg, #0a1428 0%, #051023 100%);
+			font-family: 'Segoe UI', 'Dosis', 'Nunito', sans-serif;
+			color: #e0e0e0;
+			min-height: 100vh;
+		}
+
+		.page-wrapper {
+			min-height: calc(100vh - 300px);
+			padding: 40px 20px;
+		}
+
+		.main-content {
+			width: 100%;
+		}
+
+		.seat-wrapper {
+			max-width: 1000px;
+			margin: 0 auto;
+			background: rgba(20, 35, 60, 0.85);
+			border: 1px solid rgba(255, 255, 255, 0.1);
+			border-radius: 15px;
+			padding: 40px;
+			box-shadow: 0 15px 50px rgba(33, 150, 243, 0.2);
+		}
+
+		/* HEADER */
+		.seat-header {
+			text-align: center;
+			margin-bottom: 40px;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			padding-bottom: 30px;
+		}
+
+		.seat-header h2 {
+			font-size: 28px;
+			margin-bottom: 10px;
+			font-weight: 700;
+			color: #e0e0e0;
+		}
+
+		.seat-header p {
+			font-size: 14px;
+			color: #b0b0b0;
+			margin: 8px 0;
+		}
+
+		/* SCREEN */
+		.screen {
+			text-align: center;
+			font-size: 16px;
+			font-weight: 600;
+			color: #2196F3;
+			margin: 30px 0;
+			padding: 15px;
+			background: rgba(33, 150, 243, 0.1);
+			border-top: 3px solid #2196F3;
+			border-bottom: 3px solid #2196F3;
+			letter-spacing: 2px;
+		}
+
+		/* SEATS */
+		.seat-section {
+			margin: 30px 0;
+		}
+
+		.seat-section h4 {
+			font-size: 16px;
+			font-weight: 700;
+			color: #e0e0e0;
+			margin: 30px 0 15px 0;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.seat-row {
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+			flex-wrap: wrap;
+			margin-bottom: 20px;
+		}
+
+		.seat {
+			width: 45px;
+			height: 45px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 6px;
+			font-weight: 600;
+			font-size: 12px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			border: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.seat.available {
+			background: linear-gradient(135deg, rgba(33, 150, 243, 0.3), rgba(25, 118, 210, 0.3));
+			color: #2196F3;
+		}
+
+		.seat.available:hover {
+			background: linear-gradient(135deg, #2196F3, #1976D2);
+			color: white;
+			transform: scale(1.1);
+			box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+		}
+
+		.seat.selected {
+			background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+			color: white;
+			border-color: #64B5F6;
+		}
+
+		.seat.booked {
+			background: rgba(100, 100, 100, 0.3);
+			color: #888;
+			cursor: not-allowed;
+			border-color: rgba(100, 100, 100, 0.5);
+		}
+
+		/* BOOK BUTTON */
+		.confirm-btn {
+			display: block;
+			width: 200px;
+			margin: 40px auto 0;
+			padding: 14px 30px;
+			border: none;
+			border-radius: 8px;
+			background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+			color: white;
+			font-size: 16px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.confirm-btn:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 10px 30px rgba(33, 150, 243, 0.4);
+		}
+
+		.confirm-btn:active {
+			transform: translateY(-1px);
+		}
+
+		/* Preloader */
+		#preloader {
+			display: none;
+		}
+
+		/* Legend */
+		.seat-legend {
+			display: flex;
+			justify-content: center;
+			gap: 30px;
+			margin-top: 30px;
+			padding-top: 20px;
+			border-top: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.legend-item {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			font-size: 13px;
+			color: #b0b0b0;
+		}
+
+		.legend-box {
+			width: 20px;
+			height: 20px;
+			border-radius: 3px;
+			border: 1px solid rgba(255, 255, 255, 0.1);
+		}
+
+		.legend-box.available {
+			background: linear-gradient(135deg, rgba(33, 150, 243, 0.3), rgba(25, 118, 210, 0.3));
+		}
+
+		.legend-box.selected {
+			background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+		}
+
+		.legend-box.booked {
+			background: rgba(100, 100, 100, 0.3);
+		}
+	</style>
+
+</head>
+
+<body>
+	<!--preloading-->
+	<div id="preloader">
+		<img class="logo" src="{% static 'images/logo1.png' %}" alt="" width="119" height="58">
+		<div id="status">
+			<span></span>
+			<span></span>
+		</div>
+	</div>
+	<!--end of preloading-->
+
+	<!-- BEGIN | Header -->
+	<header class="ht-header">
+		<div class="container">
+			<nav class="navbar navbar-default navbar-custom">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header logo">
+					<div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<div id="nav-icon1">
+							<span></span>
+							<span></span>
+							<span></span>
+						</div>
+					</div>
+					<a href="{% url 'index' %}"><img class="logo" src="{% static 'images/logo1.png' %}" alt=""
+							width="119" height="58"></a>
+				</div>
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav flex-child-menu menu-left">
+						<li class="hidden">
+							<a href="#page-top"></a>
+						</li>
+						<li class="dropdown first">
+							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown">
+								Home <i class="fa fa-angle-down" aria-hidden="true"></i>
+							</a>
+							<ul class="dropdown-menu level1">
+								<li><a href="{% url 'index' %}">Landing Page</a></li>
+							</ul>
+						</li>
+						<li class="dropdown first">
+							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+								movies<i class="fa fa-angle-down" aria-hidden="true"></i>
+							</a>
+							<ul class="dropdown-menu level1">
+								<li><a href="{% url 'show_movies' %}">Movie list</a></li>
+							</ul>
+						</li>
+						<li class="dropdown first">
+							<a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+								Events <i class="fa fa-angle-down" aria-hidden="true"></i>
+							</a>
+							<ul class="dropdown-menu level1">
+								<li><a href="{% url 'Live_Events' %}">Live Events</a></li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="nav navbar-nav flex-child-menu menu-right">
+						<li><a href="#">Help</a></li>
+						<li class="loginLink"><a href="#">LOG In</a></li>
+						<li class="btn signupLink"><a href="#">sign up</a></li>
+					</ul>
+				</div>
+				<!-- /.navbar-collapse -->
+			</nav>
+
+			<!-- top search form -->
+			<div class="top-search">
+				<select>
+					<option value="united">TV show</option>
+					<option value="saab">Others</option>
+				</select>
+				<input type="text" placeholder="Search for a movie, TV Show or celebrity that you are looking for">
+			</div>
+		</div>
+	</header>
+	<!-- END | Header -->
+
+	<!-- Main Content -->
+	<div class="main-content">
+		<div class="page-wrapper">
+			<div class="seat-wrapper">
+
+				<!-- HEADER -->
+				<div class="seat-header">
+					<h2>{{ movie.name }}</h2>
+					<p>{{ cinema.cinema_name }} | {{ cinema.location }}</p>
+					<p>Show Time: {{ time }}:00</p>
+				</div>
+
+				<!-- SCREEN -->
+				<div class="screen">SCREEN THIS WAY</div>
+
+				<!-- SEATS -->
+				<div class="seat-section">
+
+					<h4>Gold Seats (₹200)</h4>
+					<div class="seat-row">
+						{% for i in "123456789"|make_list %}
+						<div class="seat available">G{{ i }}</div>
+						{% endfor %}
+					</div>
+
+					<h4>Silver Seats (₹150)</h4>
+					<div class="seat-row">
+						{% for i in "123456789"|make_list %}
+						<div class="seat available">S{{ i }}</div>
+						{% endfor %}
+					</div>
+
+					<h4>Platinum Seats (₹300)</h4>
+					<div class="seat-row">
+						{% for i in "123456789"|make_list %}
+						<div class="seat available">P{{ i }}</div>
+						{% endfor %}
+					</div>
+
+				</div>
+
+				<!-- Seat Legend -->
+				<div class="seat-legend">
+					<div class="legend-item">
+						<div class="legend-box available"></div>
+						<span>Available</span>
+					</div>
+					<div class="legend-item">
+						<div class="legend-box selected"></div>
+						<span>Selected</span>
+					</div>
+					<div class="legend-item">
+						<div class="legend-box booked"></div>
+						<span>Booked</span>
+					</div>
+				</div>
+
+				<!-- BOOK BUTTON -->
+				<a href="{% url 'show_movie_by_id' movie.id %}">
+					<button class="confirm-btn">Proceed to Booking</button>
+				</a>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- BEGIN | Footer -->
+	<footer class="ht-footer">
+		<div class="container">
+			<div class="flex-parent-ft">
+				<div class="flex-child-ft item1">
+					<a href="{% static 'index-2.html'%}"><img class="logo" src="{% static 'images/logo1.png' %}"
+							alt=""></a>
+					<p>5th Avenue st, manhattan<br>
+						New York, NY 10001</p>
+					<p>Call us: <a href="#">(+01) 202 342 6789</a></p>
+				</div>
+				<div class="flex-child-ft item2">
+					<h4>Resources</h4>
+					<ul>
+						<li><a href="#">About</a></li>
+						<li><a href="#">Blockbuster</a></li>
+						<li><a href="#">Contact Us</a></li>
+						<li><a href="#">Forums</a></li>
+						<li><a href="#">Blog</a></li>
+						<li><a href="#">Help Center</a></li>
+					</ul>
+				</div>
+				<div class="flex-child-ft item3">
+					<h4>Legal</h4>
+					<ul>
+						<li><a href="#">Terms of Use</a></li>
+						<li><a href="#">Privacy Policy</a></li>
+						<li><a href="#">Security</a></li>
+					</ul>
+				</div>
+				<div class="flex-child-ft item4">
+					<h4>Account</h4>
+					<ul>
+						<li><a href="#">My Account</a></li>
+						<li><a href="#">Watchlist</a></li>
+						<li><a href="#">Collections</a></li>
+						<li><a href="#">User Guide</a></li>
+					</ul>
+				</div>
+				<div class="flex-child-ft item5">
+					<h4>Newsletter</h4>
+					<p>Subscribe to our newsletter system now <br> to get latest news from us.</p>
+					<form action="#">
+						<input type="text" placeholder="Enter your email...">
+					</form>
+					<a href="#" class="btn">Subscribe now <i class="ion-ios-arrow-forward"></i></a>
+				</div>
+			</div>
+		</div>
+		<div class="ft-copyright">
+			<div class="ft-left">
+				<p><a target="_blank" href="https://www.templateshub.net">Templates Hub</a></p>
+			</div>
+			<div class="backtotop">
+				<p><a href="#" id="back-to-top">Back to top <i class="ion-ios-arrow-thin-up"></i></a></p>
+			</div>
+		</div>
+	</footer>
+	<!-- END | Footer -->
+
+	<script>
+		document.querySelectorAll('.seat').forEach(seat => {
+			seat.addEventListener('click', () => {
+				seat.classList.toggle('selected');
+			});
+		});
+	</script>
+
+</body>
+
+</html>
