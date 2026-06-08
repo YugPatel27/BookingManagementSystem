@@ -33,11 +33,7 @@ BookingManagementSystem is a Django-powered ticketing platform designed to suppo
    python -m pip install django stripe pillow reportlab
    ```
 4. Create a `.env` file in the project root with the required secret values:
-   ```powershell
-   Set-Content .env "DJANGO_SECRET_KEY=replace-this-with-a-secure-key"
-   Add-Content .env "STRIPE_TEST_SECRET_KEY=sk_test_your_key_here"
-   Add-Content .env "STRIPE_TEST_PUBLIC_KEY=pk_test_your_key_here"
-   ```
+
 5. Apply database migrations:
    ```powershell
    python manage.py migrate
