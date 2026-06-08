@@ -67,3 +67,6 @@ BookingManagementSystem supports the following business flows:
 - Booking workflow: seat selection, order creation, booking confirmation, and persistence.
 - Payments: Stripe checkout integration for secure transaction handling.
 - Ticketing: PDF ticket generation and email delivery for confirmed bookings.
+
+<img width="1884" height="943" alt="BMS" src="https://github.com/user-attachments/assets/7fd3781f-4877-42b2-a69f-031ba77f094a" />
+
